@@ -1,0 +1,178 @@
+CREATE DATABASE airquality;
+
+---- Total dataset -------
+
+SELECT * FROM 
+26th_december_2023_air_quality_dataset;
+
+--- What is the total number of records in the dataset? ---
+
+SELECT COUNT(id) 
+AS total_records
+FROM 26th_december_2023_air_quality_dataset;
+
+------- What is the total number of city in the state -------
+
+SELECT state, 
+count(state) as total_city
+FROM 26th_december_2023_air_quality_dataset
+group by state
+order by total_city desc;
+
+-------- What is the average pollutant_avg for each state?------
+
+SELECT state, 
+AVG(pollutant_avg) 
+AS avg_pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY state;
+
+------  Calculate the total pollutant_avg for each pollutant_id.-------
+
+SELECT pollutant_id, 
+SUM(pollutant_avg) 
+AS total_pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY pollutant_id;
+
+-------- Retrieve records for a specific city.----------
+
+SELECT city, 
+pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+ORDER BY pollutant_avg desc
+LIMIT 1;
+
+------- Which city and station has the highest pollutant_avg?-------
+
+SELECT state, city, 
+station, pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+WHERE state = "delhi" 
+AND city = "delhi"
+ORDER BY pollutant_avg DESC
+limit 1;
+
+--------- List the top 10 records with the highest pollutant_max values. ----------
+
+SELECT state, city, station, 
+pollutant_max 
+FROM 26th_december_2023_air_quality_dataset
+ORDER BY pollutant_max DESC
+LIMIT 10;
+
+------- Find the records with pollutant_avg above a certain threshold. -----------
+
+SELECT * 
+FROM 26th_december_2023_air_quality_dataset
+WHERE pollutant_avg > 20
+ORDER BY pollutant_avg ASC;
+
+-------- Identify the records with the latest last_update timestamp -----------
+
+SELECT *
+FROM 26th_december_2023_air_quality_dataset
+ORDER BY last_update DESC
+LIMIT 1;
+
+------------ which state city and station have the highest pollutant max? -------------
+
+SELECT *
+FROM 26th_december_2023_air_quality_dataset
+ORDER BY pollutant_max DESC
+LIMIT 1;
+
+-------- Calculate the average pollutant_avg for each city. -------
+
+SELECT city, 
+AVG(pollutant_avg)  
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY city
+ORDER BY AVG(pollutant_avg) ASC;
+
+-------- Investigate if there is a relationship between pollutant_avg and station_code.--------
+
+SELECT station_code,
+COUNT(*) AS record_count,
+AVG(pollutant_avg) AS avg_pollutant_avg,
+MIN(pollutant_avg) AS min_pollutant_avg,
+MAX(pollutant_avg) AS max_pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY station_code
+ORDER BY avg_pollutant_avg DESC;
+
+------- Explore the seasonal variation in pollutant levels. -------
+
+SELECT
+    CASE
+        WHEN MONTH(last_update) BETWEEN 3 AND 5 THEN 'Spring'
+        WHEN MONTH(last_update) BETWEEN 6 AND 8 THEN 'Summer'
+        WHEN MONTH(last_update) BETWEEN 9 AND 11 THEN 'Fall'
+        ELSE 'Winter'
+    END AS season,
+    AVG(pollutant_avg) AS avg_pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY season
+ORDER BY
+    CASE season
+        WHEN 'Spring' THEN 1
+        WHEN 'Summer' THEN 2
+        WHEN 'Fall' THEN 3
+        ELSE 4
+    END;
+    
+    --------- Determine if there are any patterns based on the pollutant_id. -------
+    
+    SELECT
+    pollutant_id,
+    COUNT(*) AS record_count,
+    AVG(pollutant_avg) AS avg_pollutant_avg,
+    MIN(pollutant_avg) AS min_pollutant_avg,
+    MAX(pollutant_avg) AS max_pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY pollutant_id
+ORDER BY avg_pollutant_avg DESC;
+
+-- Null Hypothesis: There is no difference in pollutant_avg levels between states.
+-- Alternative Hypothesis: There is a significant difference.
+
+SELECT
+    state,
+    COUNT(state) AS sample_size,
+    AVG(pollutant_avg) AS avg_pollutant_avg,
+    STDDEV(pollutant_avg) AS std_dev_pollutant_avg
+FROM 26th_december_2023_air_quality_dataset
+GROUP BY state;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
